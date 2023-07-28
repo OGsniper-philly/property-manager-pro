@@ -19,7 +19,6 @@
 <script>
 import { ref } from 'vue'
 import { useStore } from 'vuex'
-import toastMixin from '@/services/alerts'
 
 export default {
     name: 'Login',
@@ -38,11 +37,6 @@ export default {
             store.dispatch('login', credentials)
                 .then(status => {
                     switch(status) {
-                        case 200:
-                            toastMixin.fire({
-                                title: 'Signed in Successfully'
-                            });
-                            break;
                         case 400:
                             errors.value.push("Please fill out all fields.")
                             break;
@@ -50,7 +44,7 @@ export default {
                             errors.value.push("Username or password incorrect.")
                             break;
                         default:
-                            errors.value.push("Something went wrong. Please try again.")
+                            errors.value.push("Something went wrong. Please try again later.")
                     }
                 }) 
         }

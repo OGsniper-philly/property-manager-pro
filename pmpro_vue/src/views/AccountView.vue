@@ -24,15 +24,6 @@ export default {
 
         function logoutUser() {
             store.dispatch('logout')
-                .then(status => {
-                    switch(status) {
-                        case 200:
-                            toastMixin.fire({
-                                title: 'Signed out Successfully',
-                            })
-                            break;
-                    }
-                }) 
         }
 
         return {

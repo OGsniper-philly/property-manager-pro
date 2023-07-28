@@ -5,18 +5,33 @@
 </template>
 
 <script>
+import axiosInstance from '@/services/api'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import HttpStatus from 'http-status-codes'
 
 export default {
     name: 'Dashboard',
     setup() {
         const user = ref({})
         const store = useStore()
+        const router = useRouter()
 
         onMounted(() => {
             user.value = store.getters.getUser
+            test()
         })
+        function test() {
+            axiosInstance
+                .get('auth/test/')
+                .then(response => {
+                    console.log(`Test: ${response.status} - ${HttpStatus.getStatusText(response.status)}`)
+                })
+                .catch(error => {
+                    console.error(`Test: ${error.response.status} - ${HttpStatus.getStatusText(error.response.status)}`)
+                })
+        }
 
         return {
             user,

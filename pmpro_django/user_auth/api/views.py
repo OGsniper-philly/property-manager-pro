@@ -12,7 +12,8 @@ class GetRoutes(APIView):
             'api/v1/auth/routes/': 'Returns all api routes for authentication and authorization.',
             'api/v1/auth/token/': 'Returns login access and refresh JWT tokens for a user.',
             'api/v1/auth/token/refresh/': 'Returns new access and refresh JWT tokens for a user.',
-            'api/v1/auth/token/blacklist/': 'Blacklists JWT refresh token for a user.'
+            'api/v1/auth/token/blacklist/': 'Blacklists JWT refresh token for a user.',
+            'api/v1/auth/test': 'Returns success if user has proper JWT authorization.'
         }
         return Response(routes)
     
@@ -23,4 +24,4 @@ class TestAuth(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response('Success')
+        return Response('success')
