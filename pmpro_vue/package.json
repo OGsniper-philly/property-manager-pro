@@ -7,7 +7,12 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "dayjs": "^1.11.9",
+    "http-status-codes": "^2.2.0",
+    "jwt-decode": "^3.1.2",
+    "sweetalert2": "^11.7.20",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"

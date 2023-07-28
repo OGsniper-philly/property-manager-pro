@@ -1,10 +1,40 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/">Home</router-link>
+    <div v-if="store.getters.getAuthStatus">
+      <router-link to="/dashboard">Dashboard</router-link> |
+      <router-link to="/account">Account</router-link>
+    </div>
+    <div v-else>
+      <router-link to="/login">Login</router-link>
+    </div>
+    
+    
   </nav>
   <router-view/>
 </template>
+
+<script>
+import { onBeforeMount } from 'vue';
+import { useStore } from 'vuex';
+
+export default {
+  name: 'App',
+  setup() {
+    const store = useStore()
+
+    onBeforeMount(() => {
+      store.commit('onInit')
+    })
+
+    return {
+      store,
+    }
+  }
+}
+
+</script>
+
 
 <style>
 #app {
