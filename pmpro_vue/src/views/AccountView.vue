@@ -10,7 +10,6 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import toastMixin from '@/services/alerts';
 
 export default {
     name: 'Account',
