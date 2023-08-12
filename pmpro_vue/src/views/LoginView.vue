@@ -34,19 +34,15 @@ export default {
                 username: username.value, 
                 password: password.value
             }
-            store.dispatch('login', credentials)
-                .then(status => {
-                    switch(status) {
-                        case 400:
-                            errors.value.push("Please fill out all fields.")
-                            break;
-                        case 401:
-                            errors.value.push("Username or password incorrect.")
-                            break;
-                        default:
-                            errors.value.push("Something went wrong. Please try again later.")
-                    }
-                }) 
+            for (const key in credentials) {
+                if (credentials[key] === '') {
+                    errors.value.push("One or more fields left blank. Please fill.")
+                    break
+                }
+            }
+            if (errors.value.length == 0) {
+                store.dispatch('login', credentials)
+            }
         }
 
         return {

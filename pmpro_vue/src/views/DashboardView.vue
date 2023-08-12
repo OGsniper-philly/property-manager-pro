@@ -8,7 +8,6 @@
 import axiosInstance from '@/services/api'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 import HttpStatus from 'http-status-codes'
 
 export default {
@@ -16,13 +15,12 @@ export default {
     setup() {
         const user = ref({})
         const store = useStore()
-        const router = useRouter()
 
         onMounted(() => {
             user.value = store.getters.getUser
-            test()
+            testAuth()
         })
-        function test() {
+        function testAuth() {
             axiosInstance
                 .get('auth/test/')
                 .then(response => {
