@@ -3,6 +3,7 @@ import store from '@/store'
 
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import SignUpView from '../views/SignUpView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import AccountView from '../views/AccountView.vue'
 
@@ -16,6 +17,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: LoginView
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: SignUpView
   },
   {
     path: '/dashboard',
@@ -43,7 +49,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requireLogin) && !store.getters.getAuthStatus) {
     next({ name: 'login'});
-  } else if (to.name =='login' && store.getters.getAuthStatus) {
+  } else if ((to.name =='login' || to.name == 'signup') && store.getters.getAuthStatus) {
     next({ name: 'account'});
   } else {
     next()

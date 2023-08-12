@@ -4,6 +4,7 @@ import axiosInstance from '@/services/api'
 import jwtDecode from 'jwt-decode'
 import HttpStatus from 'http-status-codes'
 import toastMixin from '@/services/alerts'
+import axios from 'axios'
 
 
 export default createStore({
@@ -39,13 +40,13 @@ export default createStore({
         axiosInstance.defaults.headers.common['Authorization'] = ''
       }
     },
-    setAuthTokens(state, tokens, req=null) {
+    setAuthTokens(state, tokens) {
       state.authTokens = tokens,
       state.isAuthenticated = true,
       localStorage.setItem('authTokens', JSON.stringify(state.authTokens))
       axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + state.authTokens.access
     },
-    removeAuthTokens(state, req=null) {
+    removeAuthTokens(state) {
       state.authTokens = { access: '', refresh: '' }
       state.isAuthenticated = false
       localStorage.removeItem('authTokens')
@@ -66,14 +67,15 @@ export default createStore({
         .post('auth/token/', credentials)
         .then(response => {
           console.log(`Login: ${response.status} - ${HttpStatus.getStatusText(response.status)}`)
+          toastMixin.fire({ title: 'Logged in Successfully' })
           this.commit('setAuthTokens', response.data)
           this.commit('setUser', response.data.access)
           router.push('/dashboard')
-          toastMixin.fire({ title: 'Signed in Successfully' })
           return response.status
         })
         .catch(error => {
           console.error(`Login: ${error.response.status} - ${HttpStatus.getStatusText(error.response.status)}`)
+          if (error.response.status == 401) { toastMixin.fire({ icon: 'warning', title: 'Username or password incorrect.' }) }
           return error.response.status
         })
     },
@@ -82,7 +84,7 @@ export default createStore({
       this.commit('removeAuthTokens')
       this.commit('removeUser')
       router.push('/')
-      toastMixin.fire({ title: 'Signed out Successfully' })
+      toastMixin.fire({ title: 'Logged out Successfully' })
       return axiosInstance
         .post('auth/token/blacklist/', context)
         .then(response => {
@@ -92,6 +94,27 @@ export default createStore({
         .catch(error => {
           console.error(`Logout: ${error.response.status} - ${HttpStatus.getStatusText(error.response.status)}`)
           if (error.response.status == 401) { console.error('User authorization already timed out.') }
+          return error.response.status
+        })
+    },
+    signup(state, context) {
+      return axiosInstance
+        .post('auth/create-user/', context)
+        .then(response => {
+          console.log(`Signup: ${response.status} - ${response.data.message}`)
+          if (response.data.success) {
+            const credentials = {
+                username: context.username,
+                password: context.password
+            }
+            this.dispatch('login', credentials)
+          } else {
+            toastMixin.fire({ icon: 'warning', title: response.data.message })
+          }
+          return response.status
+        })
+        .catch(error => {
+          console.error(`Signup: ${error.response.status} - ${HttpStatus.getStatusText(error.response.status)}`)
           return error.response.status
         })
     }
