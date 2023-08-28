@@ -39,11 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'user_auth',
+    'user_auth.apps.UserAuthConfig',
 
     "corsheaders",
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'django_rest_passwordreset',
 ]
 
 REST_FRAMEWORK = {
@@ -54,7 +55,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=3),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
@@ -112,7 +113,7 @@ ROOT_URLCONF = 'pmpro_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ BASE_DIR, 'templates/', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -179,3 +180,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email Backend Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Default SMTP Backend
+
+EMAIL_PORT = 587  # Replace with your email port
+EMAIL_USE_TLS = True  # Set to False if your email server doesn't use TLS
+EMAIL_HOST = 'smtp.gmail.com'  # Email host for gmail -> 'smtp.gmail.com'
+EMAIL_HOST_USER = 'nikolai.philipenko@gmail.com'  # Email username
+EMAIL_HOST_PASSWORD = 'emynjkkpbthmjuyn'  # Email password

@@ -4,10 +4,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.contrib.auth.models import User
-from django.db import IntegrityError
 
-
-from user_auth.models import Profile, Landlord, Tenant
+from user_auth.models import Landlord, Tenant
 from .serializers import MyTokenObtainPairSerializer
 
 
@@ -19,7 +17,8 @@ class GetRoutes(APIView):
             'api/v1/auth/token/refresh/': 'Returns new access and refresh JWT tokens for a user.',
             'api/v1/auth/token/blacklist/': 'Blacklists JWT refresh token for a user.',
             'api/v1/auth/test': 'Returns success if user has proper JWT authorization.',
-            'api/v1/auth/create-user/': 'Attemps to create a user in the database.'
+            'api/v1/auth/create-user/': 'Attemps to create a user in the database.',
+            'api/v1/auth/update-user/': 'Attemps to update a user in database.',
         }
         return Response(routes)
     
@@ -35,7 +34,26 @@ class CreateUser(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
         context = request.data
+
+        response = dict()
+        response['success'] = True
+        response['errors'] = []
+
         try:
+            user = User.objects.get(email=context['email'])
+            response['success'] = False
+            response['errors'].append('This email is already registered with a user. Please login.')
+        except User.DoesNotExist:
+            pass
+
+        try:
+            user = User.objects.get(username=context['username'])
+            response['success'] = False
+            response['errors'].append('Username already exists. Please choose another.')
+        except User.DoesNotExist:
+            pass
+        
+        if response['success']:
             user = User.objects.create_user(
                 first_name = context['first'],
                 last_name = context['last'],
@@ -43,11 +61,58 @@ class CreateUser(APIView):
                 email = context['email'],
                 password = context['password'],
             )
-            profile = Profile.objects.create(user=user)
             if context['is_landlord']:
-                Landlord.objects.create(profile=profile)
+                Landlord.objects.create(user=user)
             else:
-                Tenant.objects.create(profile=profile)
-            return Response({ 'success': True, 'message': 'Signup successful'})
-        except IntegrityError as e:
-            return Response({ 'success': False, 'message': 'Username already exists. Please choose another.'})
+                Tenant.objects.create(user=user)
+        
+        return Response(response)
+
+class UpdateUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        context = request.data
+        
+        response = dict()
+        response['success'] = True
+        response['errors'] = []
+
+        user = User.objects.get(id=context['key'])
+        user.first_name = context['first']
+        user.last_name = context['last']
+
+        if user.email != context['email']:
+            try:
+                other_user = User.objects.get(email=context['email'])
+                response['success'] = False
+                response['errors'].append('This email is already registered with a user. Please choose another.')
+            except User.DoesNotExist:
+                user.email = context['email']
+
+
+        if user.username != context['username']:
+            try:
+                other_user = User.objects.get(username=context['username'])
+                response['success'] = False
+                response['errors'].append('Username already exists. Please choose another.')
+            except User.DoesNotExist:
+                user.username = context['username']
+        
+        if response['success']:
+            user.save()
+
+        return Response(response)
+    
+class DeleteUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        key = request.data['key']
+
+        user = User.objects.get(id=key)
+
+        user.delete()
+
+        return Response({ 'success': True })
+

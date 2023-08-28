@@ -16,6 +16,9 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async req => {
+    const controller = new AbortController();
+    
+    // This will fail if user is not authenticated
     const isExpired = dayjs.unix(store.getters.getUser.exp).diff(dayjs()) < 1;
     if (isExpired) {
         const context = { refresh: store.getters.getRefresh }
@@ -35,11 +38,16 @@ axiosInstance.interceptors.request.use(async req => {
                     store.commit('removeUser')
                     req.headers.Authorization = ''
                     router.push('/login')
-                    toastMixin.fire({ icon: 'warning', title: 'Authorization timed out. Please login again.', timer: 5000 })
+                    toastMixin.fire({ icon: 'warning', title: 'Authorization timed out. Please login again.', timer: 5000 })   
                 }
+                controller.abort()
             })
     }
-    return req
+    return {
+        ...req,
+        signal: controller.signal
+    }
+    
 })
 
 export default axiosInstance

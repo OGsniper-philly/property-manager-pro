@@ -6,6 +6,7 @@ import LoginView from '../views/LoginView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import AccountView from '../views/AccountView.vue'
+import ResetPassword from '../views/ResetPassword.vue'
 
 const routes = [
   {
@@ -35,6 +36,14 @@ const routes = [
     path: '/account',
     name: 'account',
     component: AccountView,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/account/reset-password',
+    name: 'reset-password',
+    component: ResetPassword,
     meta: {
       requireLogin: true
     }
