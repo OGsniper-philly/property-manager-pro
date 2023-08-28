@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard">
-        <h1>Welcome to your dashboard, {{ user.username }}</h1>
+        <h1>Welcome to your dashboard, {{ user.first_name }}</h1>
     </div>
 </template>
 

@@ -84,7 +84,14 @@ export default {
                 errors.value.push("Please select landlord or tenant.")
             }
             if (errors.value.length == 0) {
-                store.dispatch('signup', context)
+                store.dispatch('signupUser', context)
+                    .then(response => {
+                        if (!response.success) {
+                            for (let i = 0; i < response.errors.length; i++) {
+                                errors.value.push(response.errors[i])
+                            }
+                        }   
+                    })
             }
         }
         return {

@@ -41,7 +41,12 @@ export default {
                 }
             }
             if (errors.value.length == 0) {
-                store.dispatch('login', credentials)
+                store.dispatch('loginUser', credentials)
+                    .then(response => {
+                        if (!response.success) {
+                            errors.value.push(response.error)
+                        }
+                    })
             }
         }
 
