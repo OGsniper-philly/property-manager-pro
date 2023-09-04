@@ -7,7 +7,7 @@ var toastMixin = Swal.mixin({
     title: 'General Title',
     position: 'top-right',
     showConfirmButton: false,
-    timer: 3000,
+    timer: 2000,
     timerProgressBar: true,
 });
 

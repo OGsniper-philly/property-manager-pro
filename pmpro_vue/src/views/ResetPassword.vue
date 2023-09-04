@@ -1,7 +1,7 @@
 <template>
     <h1>Reset Password</h1>
     <hr>
-    <form @submit.prevent="resetPassword">
+    <form @submit.prevent="resetPassword" onkeydown="return event.key != 'Enter';">
         <label>New Password</label>
         <input type="password" v-model="new_password1"/><br><br>
         <label>Repeat New Password</label>

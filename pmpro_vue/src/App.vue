@@ -3,14 +3,19 @@
     <router-link to="/">Home</router-link>
     <div v-if="store.getters.getAuthStatus">
       <router-link to="/dashboard">Dashboard</router-link> |
+      <div class="inline" v-if="store.getters.getLandlordStatus">
+        <router-link to="/landlord/manage-properties/">Manage Properties</router-link> |
+        <router-link to="/landlord/connect/">Connect</router-link> |
+      </div>
+      <div class="inline" v-else>
+        <router-link to="/tenant/connect/">Connect</router-link> |
+      </div>
       <router-link to="/account">Account</router-link>
     </div>
     <div v-else>
       <router-link to="/login">Login</router-link> |
       <router-link to="/signup">SignUp</router-link>
     </div>
-    
-    
   </nav>
   <router-view/>
 </template>
@@ -57,5 +62,9 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.inline {
+  display: inline;
 }
 </style>

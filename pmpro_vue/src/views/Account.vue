@@ -3,7 +3,7 @@
         <h1>Account</h1>
         <hr>
         <h3>User Profile</h3>
-        <form @submit.prevent="updateUser">
+        <form @submit.prevent="updateUser" onkeydown="return event.key != 'Enter';">
             <label>Username</label>
             <input type="text" v-model="username" :placeholder="user.username"/><br><br>
             <label>First Name</label>
@@ -13,7 +13,7 @@
             <label>Email</label>
             <input type="text" v-model="email" :placeholder="user.email"/><br>
             <button class="button-update" type="submit">Update Profile</button>
-            <div class="error" v-for="error in errors">
+            <div class="error" v-for="error in updateErrors">
                 <h3>{{ error }}</h3>
             </div>
         </form>
@@ -69,7 +69,6 @@ export default {
         function updateUser() {
             updateErrors.value = []
             const context = {
-                key: user.value.user_id,
                 first: first.value,
                 last: last.value,
                 username: username.value,
@@ -101,11 +100,8 @@ export default {
         }
         
         function deleteUser() {
-             deleteErrors.value = []
-             const context = {
-                key: user.value.user_id,
-            }
-            store.dispatch('deleteUser', context)
+            deleteErrors.value = []
+            store.dispatch('deleteUser', {})
                 .then(response => {
                     if (!response.success) {
                         deleteErrors.value.push(response.error)

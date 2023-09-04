@@ -1,16 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
-class Landlord(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+class User(AbstractUser):
+    """
+    Custom user model.
 
-    def __str__(self) -> str:
-        return f'{self.user.username}'
-
-class Tenant(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    landlord = models.ForeignKey(Landlord, on_delete=models.SET_NULL, null=True)
+    All accounts will be linked to this model.
+    """
+    is_landlord = models.BooleanField(null=True)
 
     def __str__(self) -> str:
-        return f'{self.user.username}'
+        return f'{self.first_name} {self.last_name} @{self.username}'

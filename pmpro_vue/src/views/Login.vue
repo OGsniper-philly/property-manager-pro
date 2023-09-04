@@ -2,7 +2,7 @@
     <div class="login">
         <h1>Login Page</h1>
         <hr>
-        <form @submit.prevent="loginUser">
+        <form @submit.prevent="loginUser" onkeydown="return event.key != 'Enter';">
             <h3>Username</h3>
             <input type="text" v-model="username"><br>
             <h3>Password</h3>

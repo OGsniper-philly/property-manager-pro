@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
 
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import SignUpView from '../views/SignUpView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import AccountView from '../views/AccountView.vue'
-import ResetPassword from '../views/ResetPassword.vue'
+import HomeView from '../views/Home.vue'
+import LoginView from '../views/Login.vue'
+import SignUpView from '../views/SignUp.vue'
+import DashboardView from '../views/Dashboard.vue'
+import AccountView from '../views/Account.vue'
+import ResetPasswordView from '../views/ResetPassword.vue'
+import ConnectView from '../views/ConnectView.vue'
+import LL_ManageProperties from '../views/Landlord/LL_ManageProperties.vue'
+import LL_Connect from '../views/Landlord/LL_Connect.vue'
+import TN_Connect from '../views/Tenant/TN_Connect.vue'
 
 const routes = [
   {
@@ -25,6 +29,11 @@ const routes = [
     component: SignUpView
   },
   {
+    path: '/account/reset-password',
+    name: 'reset-password',
+    component: ResetPasswordView,
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: DashboardView,
@@ -41,9 +50,33 @@ const routes = [
     }
   },
   {
-    path: '/account/reset-password',
-    name: 'reset-password',
-    component: ResetPassword,
+    path: '/connect',
+    name: 'connect',
+    component: ConnectView,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/landlord/manage-properties',
+    name: 'LandlordManageProperties',
+    component: LL_ManageProperties,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/landlord/connect',
+    name: 'LandlordConnect',
+    component: LL_Connect,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/tenant/connect',
+    name: 'TenantConnect',
+    component: TN_Connect,
     meta: {
       requireLogin: true
     }

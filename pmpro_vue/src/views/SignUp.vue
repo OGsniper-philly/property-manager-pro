@@ -1,7 +1,7 @@
 <template>
     <div class="signup">
         <h1>SignUp</h1>
-        <form @submit.prevent="signup">
+        <form @submit.prevent="signup" onkeydown="return event.key != 'Enter';">
             <label>First Name:</label>
             <input type="text" v-model="first"><br>
             <label>Last Name:</label>
